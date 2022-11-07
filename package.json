@@ -1,0 +1,21 @@
+{
+  "name": "hive-discover-chain-sync",
+  "version": "1.0.0",
+  "description": "",
+  "main": "listener.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "action-chain",
+  "license": "ISC",
+  "dependencies": {
+    "@hiveio/hive-js": "^2.0.4",
+    "@opensearch-project/opensearch": "^1.1.0",
+    "markdown-it": "^12.2.0",
+    "minimist": "^1.2.6",
+    "moment": "^2.29.2",
+    "node-html-parser": "^3.3.6",
+    "request": "^2.88.2",
+    "xxhash": "^0.3.0"
+  }
+}
