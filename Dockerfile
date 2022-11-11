@@ -13,4 +13,4 @@ RUN npm i bcrypt
 
 COPY . .
 ENTRYPOINT [ "node", "listener.js" ] 
-# registry.hive-discover.tech/chain-sync:0.1.7.5.1
+# registry.hive-discover.tech/chain-sync:0.1.7.5.3

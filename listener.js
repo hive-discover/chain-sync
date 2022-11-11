@@ -63,7 +63,14 @@ async function* streamBlocks(){
     
     
     const {res : rpcResponse, body : rpcBody, err : rpcError} = await new Promise((resolve, reject) => {
-        request({url : HIVE_NODES[Math.floor(Math.random() * HIVE_NODES.length)], body : JSON.stringify(rpc_data), method : "POST"}, (err, res, body) => {
+        const req_data = {
+            url : HIVE_NODES[Math.floor(Math.random() * HIVE_NODES.length)], 
+            body : JSON.stringify(rpc_data), 
+            method : "POST", 
+            headers : {"Content-Type" : "application/json"}
+        };
+        
+        request(req_data, (err, res, body) => {
             resolve({body, res, err});
         });
     });

@@ -18,18 +18,22 @@ const getCommentID = ({author, permlink}) => {
 module.exports.getCommentID = getCommentID;
 
 function parsePost(comment){
-    
-    try{
-        // Parse Metadata
-        comment.json_metadata = JSON.parse(comment.json_metadata)
-        comment.json_metadata.tags = comment.json_metadata.tags || []
-        comment.json_metadata.image = comment.json_metadata.image || []
+    // Parse Metadata and enforce defaults
+    try
+    {     
+        comment.json_metadata = JSON.parse(comment.json_metadata);
 
-        // Check variable types
-        if(!comment.json_metadata.tags || !Array.isArray(comment.json_metadata.tags))
+        // Problem with some posts: Some are encoded differently and require two 
+        // parsing steps to get the correct result
+        if(typeof comment.json_metadata === "string")
+            comment.json_metadata = JSON.parse(comment.json_metadata);
+
+        // Enforce to have a tags / image array
+        if(!comment.json_metadata?.tags || !Array.isArray(comment.json_metadata.tags))
             comment.json_metadata.tags = [];
-        if(!comment.json_metadata.image || !Array.isArray(comment.json_metadata.image))
+        if(!comment.json_metadata?.image || !Array.isArray(comment.json_metadata.image))
             comment.json_metadata.image = [];
+
     } catch {
         // JSON Parse error --> set to {} because it is usually '' then
         comment.json_metadata = {tags : [], image : []}

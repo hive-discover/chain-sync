@@ -1,9 +1,9 @@
 // Hive Vars
 module.exports.HIVE_NODES = [
+    "https://rpc.ausbit.dev",
+    "https://techcoderx.com",
+    "https://rpc.ecency.com",
     "https://api.hive.blog",
-    "https://api.deathwing.me",
-    "https://hive-api.arcange.eu",
-    "https://hived.emre.sh",
     "https://api.openhive.network"
 ]
 
