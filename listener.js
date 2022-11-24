@@ -62,7 +62,7 @@ async function* streamBlocks(){
     const rpc_data = block_nums.map((value, k) => {return {jsonrpc : "2.0", method : "condenser_api.get_ops_in_block", params: [value, false], id : k}});
     
     
-    const {res : rpcResponse, body : rpcBody, err : rpcError} = await new Promise((resolve, reject) => {
+    const {res : rpcResponse, body : rpcBody, err : rpcError, node_url} = await new Promise((resolve, reject) => {
         const req_data = {
             url : HIVE_NODES[Math.floor(Math.random() * HIVE_NODES.length)], 
             body : JSON.stringify(rpc_data), 
@@ -71,19 +71,47 @@ async function* streamBlocks(){
         };
         
         request(req_data, (err, res, body) => {
-            resolve({body, res, err});
+            resolve({body, res, err, node_url : req_data.url});
         });
     });
 
-    if(rpcResponse.statusCode !== 200 || rpcError || !rpcBody){
-        console.error("Error fetching RpcData: ", rpc_response.statusCode);
-        console.error(rpc_response, rpcError, rpcBody);
-        console.error("Restarting...")
-        return exit(-1);
+    if(rpcResponse?.statusCode !== 200 || rpcError || !rpcBody){
+        console.error("Error fetching RpcData: ", rpcResponse?.statusCode);
+        console.error(rpcError, rpcBody);
+
+        if(HIVE_NODES.length === 0)
+        {
+            console.error("No more nodes left to try. Restarting...");
+            return exit(-1);
+        }
+
+        // Remove the node from the list and try again
+        HIVE_NODES.splice(HIVE_NODES.indexOf(node_url), 1);
+        console.log("Removed node from list: ", node_url);
+        return yield* streamBlocks();
     }
 
+    
+
     // Parse the response
-    const blocks = JSON.parse(rpcBody).map(data => data.result).filter(ops => ops.length > 0);       
+    const parsedBody = JSON.parse(rpcBody);
+    if(!parsedBody || !Array.isArray(parsedBody)){
+        console.error("Error on parsing the RPC-Body: Not an array");
+
+        if(HIVE_NODES.length === 0)
+        {
+            console.error("No more nodes left to try. Restarting...");
+            return exit(-1);
+        }
+
+        // Remove the node from the list and try again
+        console.error("Removing node from list: ", node_url);
+        HIVE_NODES.splice(HIVE_NODES.indexOf(node_url), 1);
+        return yield* streamBlocks();
+    }
+
+    // Prepare the stream
+    const blocks = parsedBody.map(data => data.result).filter(ops => ops.length > 0);       
     if(!blocks){
         console.error("Error parsing Rpc Data: ");
         console.error(rpcBody, rpc_response);

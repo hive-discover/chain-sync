@@ -3,6 +3,11 @@ module.exports.HIVE_NODES = [
     "https://rpc.ausbit.dev",
     "https://techcoderx.com",
     "https://rpc.ecency.com",
+    "https://hived.emre.sh",
+    "https://anyx.io",
+    "https://hiveapi.actifit.io",
+    "https://api.deathwing.me",
+    "https://hive-api.arcange.eu",
     "https://api.hive.blog",
     "https://api.openhive.network"
 ]
